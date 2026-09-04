@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ group["name"] }}</title>
+</head>
+<body>
+
+<h1>{{ group["name"] }}</h1>
+
+<h2>Members</h2>
+
+<ul>
+    {% for member in group["members"] %}
+        <li>{{ member }}</li>
+    {% endfor %}
+</ul>
+
+
+<h2>Add Expense</h2>
+
+<form method="POST"
+      action="{{ url_for('add_expense', group_id=group['id']) }}">
+
+    <label>Description:</label>
+
+    <input
+        type="text"
+        name="description"
+        placeholder="Dinner"
+        required
+    >
+
+    <br><br>
+
+    <label>Amount:</label>
+
+    <input
+        type="number"
+        name="amount"
+        step="0.01"
+        required
+    >
+
+    <br><br>
+
+    <label>Paid By:</label>
+
+    <select name="paid_by">
+
+        {% for member in group["members"] %}
+
+            <option value="{{ member }}">
+                {{ member }}
+            </option>
+
+        {% endfor %}
+
+    </select>
+
+    <br><br>
+
+    <button type="submit">
+        Add Expense
+    </button>
+
+</form>
+
+
+<h2>Expenses</h2>
+
+{% if group["expenses"] %}
+
+    {% for expense in group["expenses"] %}
+
+        <p>
+            <b>{{ expense["description"] }}</b>
+            -
+            ₹{{ expense["amount"] }}
+            -
+            Paid by {{ expense["paid_by"] }}
+        </p>
+
+    {% endfor %}
+
+{% else %}
+
+    <p>No expenses added.</p>
+
+{% endif %}
+
+
+<br>
+
+<a href="{{ url_for('settle_up', group_id=group_id) }}">
+    <button>Settle Up</button>
+</a>
+
+<br><br>
+
+<a href="{{ url_for('index') }}">
+    Back to Dashboard
+</a>
+
+</body>
+</html>
